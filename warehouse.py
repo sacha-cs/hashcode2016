@@ -1,4 +1,5 @@
 import utils
+from drone import Drone
 
 class WarehouseObject(object):
     def __init__(self, productID):
@@ -7,7 +8,8 @@ class WarehouseObject(object):
 
 class Warehouse(object):
     
-    def __init__(self, x, y, products):
+    def __init__(self, n, x, y, products):
+        self.n = n
         self.x = x
         self.y = y
         self.products = [WarehouseObject(p) for p in products]
@@ -22,8 +24,23 @@ class Warehouse(object):
                 return True
         return False
 
+    def loadDrone(self, drone, sort=True):
+        if(len(self.potentialOrders) == 0):
+            return False;
+        if(sort):
+            self.sortOrders()
+        products = self.getProductsForOrder(self.potentialOrders[0])
+        while(len(products) > 0):
+            if(drone.canTake(products[0].productID)):
+                p = products.pop()
+                drone.load(p.productID, p.destination, self.n)
+            else:
+                return True;
+        self.potentialOrders.pop(0)
+        #TODO: drone can take more - nearest neighbour search for next delivery
+
     def getProductsForOrder(self, order):
-        return filter(lambda wo: w.destination = order, products)
+        return filter(lambda w: w.destination == order, self.products)
 
     def sortOrders(self):
         self.potentialOrders.sort(key=lambda o: self.getFitnessForOrder(o), reverse=True)
