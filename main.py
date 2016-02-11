@@ -2,7 +2,7 @@ from order import Order
 from warehouse import Warehouse
 import setup
 from eventSystem import Event
-from drone import Drone    
+from drone import Drone
 import utils
 import math
 
@@ -17,7 +17,7 @@ for n in range(int(raw_input())):
     productAmount = [int(w) for w in raw_input().split(" ")]
     products = []
     for i in range(len(productAmount)):
-        products += ([i] * productAmount[i]) 
+        products += ([i] * productAmount[i])
     w = Warehouse(n, x, y, products)
     warehouses.append(w)
     warehouseByPos[x + y * columns] = w
@@ -34,7 +34,7 @@ for c in range(int(raw_input())):
     weight = 0
     for product in products:
         weight += utils.getProductWeight(product)
-    orders.append(Order(x, y, products, weight))
+    orders.append(Order(x, y, products, weight, warehouses))
 
 currentTurn = 0;
 events = {}
@@ -66,7 +66,7 @@ def getOrderForDrone(d):
     warehouse.loadDrone(d)
     dest = d.getDestination()
     addMoveToEvent(d, dest.x, dest.y, lambda: arrivedAt(d, dest))
-    
+
 
 
 sortedOrders = setup.sortOrders(orders)
