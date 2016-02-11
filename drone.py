@@ -1,4 +1,4 @@
-from main import getProductWeight
+from utils import getProductWeight
 
 class Drone(object):
     def __init__(self, x, y, maxLoad):
