@@ -37,3 +37,14 @@ def executeEvents(turn):
         return
     for e in events[turn]:
         e.callback()
+
+
+sortedOrders = setup.sortOrders(orders)
+for order in sortedOrders:
+    ws =setup.getWarehousesByDistance(order.x, order.y, warehouses)
+    for p in order.products:
+        #TODO: find un-doable orders
+        for w in ws:
+            if(w.setDestination(p, order)):
+                break
+
