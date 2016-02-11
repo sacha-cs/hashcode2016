@@ -22,7 +22,6 @@ for c in range(int(raw_input())):
     for product in products:
         weight += productWeights[product]
     orders.append(Order(x, y, products, weight))
-    customers.append(Order(x, y, products))
 
 def getProductWeight(itemId):
     return productWeights[itemId]

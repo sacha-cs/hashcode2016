@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 def sortOrders(orders):
     for order in orders:
@@ -8,10 +9,11 @@ def sortOrders(orders):
     return orders
 
 def fitnessOrder(order):
-    fs = [1,2,3]
-    return random.choice(fs)
-
+    return order.weight
 
 def getWarehousesByDistance(x, y, warehouses):
-    #TODO: sort
+    warehouses.sort(key=lambda w: distance(x, y, w.x, w.y), reverse=False)
     return warehouses
+
+def distance(x1, y1, x2, y2):
+    return np.sqrt(np.square(x2-x1) + np.square(y2-y1))
