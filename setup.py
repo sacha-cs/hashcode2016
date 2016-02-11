@@ -10,3 +10,8 @@ def sortOrders(orders):
 def fitnessOrder(order):
     fs = [1,2,3]
     return random.choice(fs)
+
+
+def getWarehousesByDistance(x, y, warehouses):
+    #TODO: sort
+    return warehouses
