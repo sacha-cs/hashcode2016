@@ -26,17 +26,18 @@ class Warehouse(object):
 
     def loadDrone(self, drone, sort=True):
         if(len(self.potentialOrders) == 0):
-            return False;
+            return not sort;
         if(sort):
             self.sortOrders()
         products = self.getProductsForOrder(self.potentialOrders[0])
         while(len(products) > 0):
             if(drone.canTake(products[0].productID)):
-                p = products.pop()
+                p = products.pop(0)
                 drone.load(p.productID, p.destination, self.n)
             else:
                 return True;
         self.potentialOrders.pop(0)
+        return True;
         #TODO: drone can take more - nearest neighbour search for next delivery
 
     def getProductsForOrder(self, order):

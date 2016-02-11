@@ -25,7 +25,8 @@ class Drone(object):
         self.inventory[dest].append(p)
 
     def unload(self, dest):
-        for p in inventory[dest]:
+        print self.n, 'D', dest.n, self.inventory[dest][0], 1
+        for p in self.inventory[dest]:
             self.weightLeft += getProductWeight(p)
         del self.inventory[dest]
 

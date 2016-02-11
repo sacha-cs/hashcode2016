@@ -10,12 +10,12 @@ def sortOrders(orders):
 
 def fitnessOrder(order):
     neededW = []
-    neededProducts = order.products
+    neededProducts = order.products[:]
     for w in order.warehouses:
-        if len(neededProducts) == 0:
+        if (len(neededProducts) == 0):
             break
-        elif:
-            wProducts = [p.productId for p in w.products]
+        else:
+            wProducts = [p.productID for p in w.products]
             tempNeededProducts = neededProducts
             for neededP in neededProducts:
                 if neededP in wProducts:

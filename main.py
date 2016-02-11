@@ -34,55 +34,57 @@ for c in range(int(raw_input())):
     weight = 0
     for product in products:
         weight += utils.getProductWeight(product)
-    orders.append(Order(x, y, products, weight, warehouses))
+    orders.append(Order(c, x, y, products, weight, warehouses))
 
 currentTurn = 0;
 events = {}
-def registerEvent(turn, Event):
+eventArgs = {}
+def registerEvent(turn, Event, *arg):
     if(turn not in events):
         events[turn] = []
+        eventArgs[turn] = []
     events[turn].append(Event)
+    eventArgs[turn].append(arg)
 
 def executeEvents(turn):
     if(turn not in events):
         return
-    for e in events[turn]:
-        e()
+    for i in range(len(events[turn])):
+        events[turn][i](*eventArgs[turn][i])
 
-def addMoveToEvent(d, x, y, callback):
+def addMoveToEvent(d, x, y, callback, *args):
     distance = utils.distance(x, y, d.x, d.y)
     time = int(math.ceil(distance))
-    registerEvent(currentTurn + time, lambda: callback)
+    d.move(x, y)
+    registerEvent(currentTurn + time, callback, *args)
 
 def arrivedAt(d, dest):
     d.move(dest.x, dest.y)
     d.unload(dest)
     #TODO: go to other deliveries, but for now just go back to a warehouse
     ws = setup.getWarehousesByDistance(d.x, d.y, warehouses)
-    registerEvent(currentTurn+1, lambda: addMoveToEvent(d, ws[0].x, ws[0].y, lambda: getOrderForDrone(d)))
+    registerEvent(currentTurn+1, addMoveToEvent, d, ws[0].x, ws[0].y, getOrderForDrone, d)
 
 def getOrderForDrone(d):
     warehouse = warehouseByPos[d.x + d.y * columns]
-    warehouse.loadDrone(d)
+    if(not warehouse.loadDrone(d)):
+        ws = setup.getWarehousesByDistance(d.x, d.y, warehouses)
+        addMoveToEvent(d, ws[1].x, ws[1].y, getOrderForDrone, d)
+        return;
     dest = d.getDestination()
-    addMoveToEvent(d, dest.x, dest.y, lambda: arrivedAt(d, dest))
-
-
+    addMoveToEvent(d, dest.x, dest.y, arrivedAt, d, dest)
 
 sortedOrders = setup.sortOrders(orders)
 for order in sortedOrders:
-    print order
     ws = setup.getWarehousesByDistance(order.x, order.y, warehouses)
     for p in order.products:
-        print p
         #TODO: find un-doable orders
         for w in ws:
             if(w.setDestination(p, order)):
-                print("Setting destination")
                 break
 
 for d in drones:
-    registerEvent(0, lambda: getOrderForDrone(d))
+    registerEvent(0, getOrderForDrone, d)
 
 for turn in range(deadline):
     currentTurn = turn
