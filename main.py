@@ -1,6 +1,7 @@
 from order import Order
 from warehouse import Warehouse
 import setup
+from eventSystem import Event
 
 [rows, columns, drones, deadline, maxLoad] = raw_input().split(" ")
 raw_input() # ignore number of products
@@ -21,3 +22,19 @@ for c in range(int(raw_input())):
     for product in products:
         weight += productWeights[product]
     orders.append(Order(x, y, products, weight))
+    customers.append(Order(x, y, products))
+
+def getProductWeight(itemId):
+    return productWeights[itemId]
+
+events = {}
+def registerEvent(turn, Event):
+    if(turn not in events):
+        events[turn] = []
+    events[turn].append(Event)
+
+def executeEvents(turn):
+    if(turn not in events):
+        return
+    for e in events[turn]:
+        e.callback()
