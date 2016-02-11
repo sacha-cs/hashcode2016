@@ -1,5 +1,6 @@
 from order import Order
 from warehouse import Warehouse
+from eventSystem import Event
 
 [rows, columns, drones, deadline, maxLoad] = raw_input().split(" ")
 raw_input() # ignore number of products
@@ -17,3 +18,18 @@ for c in range(int(raw_input())):
     raw_input()
     products = [int(num) for num in raw_input().split(" ")]
     customers.append(Order(x, y, products))
+
+events = {}
+def registerEvent(turn, Event):
+    if(turn not in events):
+        events[turn] = []
+    events[turn].append(Event)
+
+def executeEvents(turn):
+    if(turn not in events):
+        return
+    for e in events[turn]:
+        e.callback()
+
+
+
