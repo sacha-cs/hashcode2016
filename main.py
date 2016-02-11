@@ -19,6 +19,9 @@ for c in range(int(raw_input())):
     products = [int(num) for num in raw_input().split(" ")]
     customers.append(Order(x, y, products))
 
+def getProductWeight(itemId):
+    return productWeights[itemId]
+
 events = {}
 def registerEvent(turn, Event):
     if(turn not in events):
