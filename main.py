@@ -22,7 +22,6 @@ for c in range(int(raw_input())):
     for product in products:
         weight += productWeights[product]
     orders.append(Order(x, y, products, weight))
-    customers.append(Order(x, y, products))
 
 def getProductWeight(itemId):
     return productWeights[itemId]
@@ -38,3 +37,14 @@ def executeEvents(turn):
         return
     for e in events[turn]:
         e.callback()
+
+
+sortedOrders = setup.sortOrders(orders)
+for order in sortedOrders:
+    ws =setup.getWarehousesByDistance(order.x, order.y, warehouses)
+    for p in order.products:
+        #TODO: find un-doable orders
+        for w in ws:
+            if(w.setDestination(p, order)):
+                break
+
