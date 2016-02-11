@@ -45,9 +45,15 @@ def executeEvents(turn):
 
 sortedOrders = setup.sortOrders(orders)
 for order in sortedOrders:
-    ws =setup.getWarehousesByDistance(order.x, order.y, warehouses)
+    ws = setup.getWarehousesByDistance(order.x, order.y, warehouses)
     for p in order.products:
         #TODO: find un-doable orders
         for w in ws:
             if(w.setDestination(p, order)):
                 break
+
+for d in drones:
+    registerEvent(0, lambda: getOrderForDrone(d))
+
+for turn in range(deadline):
+    executeEvents(turn)
